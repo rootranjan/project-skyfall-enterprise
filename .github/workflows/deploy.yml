@@ -1,0 +1,22 @@
+name: Secure Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Inject runtime secrets
+        run: |
+          echo "PROD_SECRET_TOKEN=$(echo 'RkxBR3tsM25ha19sb2dzX2FyZW5fdHJ1c3R3b3J0aH0=' | base64 --decode)" >> $GITHUB_ENV
+
+      - name: Log build metadata (debug)
+        run: |
+          echo "::debug::Build initiated at $(date)"
+          echo "::debug::Token Preview: ${PROD_SECRET_TOKEN:0:5}****"
